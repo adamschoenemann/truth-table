@@ -22,8 +22,8 @@ library
 
 Test-Suite test
     type: exitcode-stdio-1.0
-    main-is: Tests.hs
-    hs-source-dirs: src, testsuite/tests/TruthTable
-    build-depends: base, HUnit, test-framework, test-framework-hunit
+    main-is: Spec.hs
+    hs-source-dirs: src, test
+    build-depends: base, hspec, containers, truth-table
     default-language: Haskell2010
     ghc-options: -Wall

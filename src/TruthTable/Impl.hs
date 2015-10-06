@@ -2,13 +2,13 @@ module TruthTable.Impl ( buildTable
 				  		, showTable
 				  		, printTable ) where
 
-import Data.List (nub, intercalate, transpose)
-import Data.Maybe (fromJust)
+import Data.List (intercalate, transpose)
 import qualified Data.Map as Map
 
 import TruthTable.WWF
 
 type TruthTable = [Map.Map WWF Bool]
+
 alignTable :: [[String]] -> [[String]]
 alignTable = transpose . (map align) . transpose
     where
@@ -33,14 +33,6 @@ buildTable :: WWF -> TruthTable
 buildTable wwf = let m = permuteMap $ vars wwf
                  in map (\m' -> expand m' wwf) $ m
 
-(==>) :: Bool -> Bool -> Bool
-True ==> False = False
-_    ==> _     = True
-
-(<==>) :: Bool -> Bool -> Bool
-a <==> b
-    | a == b = True
-    | otherwise = False
 
 
 sample :: [[a]] -> [[a]]
@@ -66,22 +58,3 @@ vars = Map.fromList . map (\w -> (w, [True, False])) . (filter isVar) . enumerat
         isVar (Var _) = True
         isVar _       = False
 
-eval :: Map.Map WWF Bool -> WWF -> Bool
-eval m var@(Var v) = m Map.! var
-eval _ (Const x)   = x
-eval m (Not e)     = not (eval m e)
-eval m (And x y)   = eval m x && eval m y
-eval m (Or  x y)   = eval m x || eval m y
-eval m (Impl x y)  = eval m x ==> eval m y
-eval m (Equi x y)  = eval m x <==> eval m y
-
-traverse :: (WWF -> a) -> WWF -> [a]
-traverse f wwf@(Not e)   = f wwf : traverse f e
-traverse f wwf@(And x y) = f wwf : (traverse f x ++ traverse f y)
-traverse f wwf@(Or x y) = f wwf : (traverse f x ++ traverse f y)
-traverse f wwf@(Impl x y) = f wwf : (traverse f x ++ traverse f y)
-traverse f wwf@(Equi x y) = f wwf : (traverse f x ++ traverse f y)
-traverse f wwf = [f wwf]
-
-enumerate :: WWF -> [WWF]
-enumerate = nub . traverse id
