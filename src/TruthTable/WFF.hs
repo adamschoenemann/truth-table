@@ -1,5 +1,5 @@
 module TruthTable.WFF (
-      WFF(..), (∧), (∨), (-->), (<-->)
+      WFF(..), (∧), (∨), (-->), (<->), (/\), (\/)
     , eval, traverse, enumerate
 ) where
 
@@ -28,15 +28,20 @@ instance Show WFF where
 (∧) :: WFF -> WFF -> WFF
 a ∧ b = And a b
 
-
 (∨) :: WFF -> WFF -> WFF
 a ∨ b = Or a b
+
+(/\) :: WFF -> WFF -> WFF
+a /\ b = And a b
+
+(\/) :: WFF -> WFF -> WFF
+a \/ b = Or a b
 
 (-->) :: WFF -> WFF -> WFF
 a --> b = Impl a b
 
-(<-->) :: WFF -> WFF -> WFF
-a <--> b = Equi a b
+(<->) :: WFF -> WFF -> WFF
+a <-> b = Equi a b
 
 (==>) :: Bool -> Bool -> Bool
 True ==> False = False

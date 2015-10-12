@@ -4,7 +4,7 @@ import SpecHelper
 
 import qualified Data.Map as Map
 
-p, q :: WWF
+p, q :: WFF
 p = Var "P"
 q = Var "Q"
 

@@ -1,5 +1,5 @@
 
-module TruthTable.WWFSpec where
+module TruthTable.WFFSpec where
 
 import SpecHelper
 
@@ -7,14 +7,14 @@ import Test.QuickCheck
 
 import qualified Data.Map as Map
 
-instance Arbitrary WWF where
+instance Arbitrary WFF where
     arbitrary = do
         b <- elements [True, False]
         return (Const b)
 
 spec :: Spec
 spec = do
-    describe "WWF" $ do
+    describe "WFF" $ do
         describe "And" $ do
             it "is commutative" $ property $
                 \x y -> eval Map.empty (x `And` y) == eval Map.empty (y `And` x)
