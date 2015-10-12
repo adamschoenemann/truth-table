@@ -5,9 +5,9 @@ module TruthTable.Impl ( buildTable
 import Data.List (intercalate, transpose)
 import qualified Data.Map as Map
 
-import TruthTable.WWF
+import TruthTable.WFF
 
-type TruthTable = [Map.Map WWF Bool]
+type TruthTable = [Map.Map WFF Bool]
 
 alignTable :: [[String]] -> [[String]]
 alignTable = transpose . (map align) . transpose
@@ -29,7 +29,7 @@ printTable t  = do
     mapM_ (putStrLn . intercalate " | ") $ alignTable $ showTable t
 
 
-buildTable :: WWF -> TruthTable
+buildTable :: WFF -> TruthTable
 buildTable wwf = let m = permuteMap $ vars wwf
                  in map (\m' -> expand m' wwf) $ m
 
@@ -41,7 +41,7 @@ sample [xs] = map (\x -> [x]) xs
 sample [xs, ys] = [[x,y] | x <- xs, y <- ys]
 sample (xs:xss) = concat $ map (\x -> map (x:) (sample xss)) xs
 
-expand :: Map.Map WWF Bool -> WWF -> Map.Map WWF Bool
+expand :: Map.Map WFF Bool -> WFF -> Map.Map WFF Bool
 expand m w = Map.fromList $ map (\w' -> (w', eval m w')) $ enumerate w
 
 permuteMap :: (Ord k) => Map.Map k [v] -> [Map.Map k v]
@@ -52,7 +52,7 @@ permuteMap m =
         indices = sample $ vals
     in  map (Map.fromList . zip keys) indices
 
-vars :: WWF -> Map.Map WWF [Bool]
+vars :: WFF -> Map.Map WFF [Bool]
 vars = Map.fromList . map (\w -> (w, [True, False])) . (filter isVar) . enumerate
     where
         isVar (Var _) = True
