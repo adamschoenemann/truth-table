@@ -12,7 +12,41 @@ data WFF = Const Bool
          | And  WFF WFF
          | Or   WFF WFF
          | Impl WFF WFF
-         | Equi WFF WFF deriving (Eq, Ord)
+         | Equi WFF WFF deriving (Ord)
+
+
+instance Eq WFF where
+    (Const x)                          == (Const y)                          = x == y
+    Var s                              == Var s'                             = s == s'
+    Not x                              == Not y                              = x == y
+    And x y                            == And x' y'                          = x == x' && y == y'
+    Or x y                             == Or x' y'                           = x == x' && y == y'
+    Impl x y                           == Impl x' y'                         = x == x' && y == y'
+    Equi x y                           == Equi x' y'                         = x == x' && y == y'
+
+    -- True = False --> False
+    (Const True)                       == (Const False) `Impl` (Const False) = True
+    (Const False) `Impl` (Const False) == (Const True)                       = True
+
+    -- \lnot x == x --> False
+    Not x                              == (y `Impl` (Const False))           = x == y
+    (y `Impl` (Const False))           == Not x                              = x == y
+
+    -- x <--> y == (x --> y) /\ (y --> x)
+    Equi x y                           == (x' `Impl` y') `And` (y'' `Impl` x'')
+                                | and [x == x', x'' == x, y == y', y == y''] = True
+                                | otherwise                                  = False
+
+    Not (Not x)                        == y                                  = x == y
+    y                                  == Not (Not x)                        = x == y
+    x                                  == (y `Impl` (Const False)) `Impl` (Const False) = x == y
+    (y `Impl` (Const False)) `Impl` (Const False) == x                              = x == y
+
+
+    _                                  == _                                  = False
+
+    x                                  /= y                                  = not (x == y)
+
 
 instance Show WFF where
     show (Const x) = show x
