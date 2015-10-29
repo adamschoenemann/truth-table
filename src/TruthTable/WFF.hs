@@ -58,6 +58,10 @@ instance Show WFF where
     show (Equi x y) = "(" ++ show x ++ " <--> " ++ show y ++ ")"
 
 
+infix 1 <->
+infix 2 -->
+infix 3 \/
+infix 4 /\
 
 (∧) :: WFF -> WFF -> WFF
 a ∧ b = And a b
