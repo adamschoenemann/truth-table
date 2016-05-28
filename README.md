@@ -7,7 +7,7 @@ Example
 -------
 
 ```haskell
-p, q, r :: WWF
+p, q, r :: WFF -- WFF means Well-Formed-Formula (a well-formed proposition expression)
 p = Var "P"
 q = Var "Q"
 r = Var "R"
